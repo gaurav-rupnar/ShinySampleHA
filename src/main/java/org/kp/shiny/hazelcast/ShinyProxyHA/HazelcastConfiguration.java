@@ -24,6 +24,8 @@ public class HazelcastConfiguration {
   @Autowired
   Environment environment;
 
+  @Autowired
+  WebFilter webFilter;
 
   @Bean
   public HazelcastInstance hazelcastInstance() {
@@ -34,6 +36,7 @@ public class HazelcastConfiguration {
     String[] split = hosts.split(",");
     network.addAddress(split).setConnectionTimeout(1000);;
     clientConfig.getNetworkConfig().setSmartRouting(true);
+    clientConfig.setInstanceName("devvv");
     return HazelcastClient.newHazelcastClient(clientConfig);
   }
 
@@ -60,9 +63,9 @@ public class HazelcastConfiguration {
 
   @Bean
   public FilterRegistrationBean hazelcastFilter() {
-    FilterRegistrationBean registration = new FilterRegistrationBean(new SpringAwareWebFilter());
+    FilterRegistrationBean registration = new FilterRegistrationBean(webFilter);
 
-    registration.addUrlPatterns("/*r");
+    registration.addUrlPatterns("/*");
     registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
 
     // Configure init parameters as appropriate:
