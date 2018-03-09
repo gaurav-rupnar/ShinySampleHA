@@ -22,8 +22,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
 
-    @Autowired
-    private WebFilter springAwareWebFilter;
+
 
     @Autowired
     private SessionRegistry sessionRegistry;

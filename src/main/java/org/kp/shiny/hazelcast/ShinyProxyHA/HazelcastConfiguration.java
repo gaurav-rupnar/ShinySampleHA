@@ -36,7 +36,7 @@ public class HazelcastConfiguration {
     String[] split = hosts.split(",");
     network.addAddress(split).setConnectionTimeout(1000);;
     clientConfig.getNetworkConfig().setSmartRouting(true);
-    clientConfig.setInstanceName("devvv");
+   clientConfig.setInstanceName("hcdev");
     return HazelcastClient.newHazelcastClient(clientConfig);
   }
 
@@ -62,10 +62,15 @@ public class HazelcastConfiguration {
   }
 
   @Bean
-  public FilterRegistrationBean hazelcastFilter() {
-    FilterRegistrationBean registration = new FilterRegistrationBean(webFilter);
+  public FilterRegistrationBean hazelcastFilter(HazelcastInstance hazelcastInstance) {
+    Properties properties = new Properties();
+    properties.put("instance-name", hazelcastInstance.getName());
+    properties.put("sticky-session", "false");
+    properties.put("use-client","true");
 
-    registration.addUrlPatterns("/*");
+    FilterRegistrationBean registration = new FilterRegistrationBean(new SpringAwareWebFilter(properties));
+
+    registration.addUrlPatterns("/*r");
     registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
 
     // Configure init parameters as appropriate:
